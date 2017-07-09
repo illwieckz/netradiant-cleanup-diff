@@ -140,10 +140,24 @@ do
 			echo "'${filename}' -> '${rootdir}/${preprocdir}/${filename}'"
 			sed -e "s|${rootdir}/${repodir}||;
 					s|${rootdir}/${builddir}||;
+					s|void crt_init()||;
+					s|crt_init();||;
+					s|void MainFrame::ReleaseContexts()||;
+					s|void MainFrame::CreateContexts()||
+					s|^void ReleaseContexts();$||;
+					s|^void CreateContexts();$||;
+					s|^.*debug_[a-z]*.*{$|{|;
+					s|^.*debug_[a-z]*.*;$||;
+					s|^void RenderNormals() const;$||;
+					s|^.*printParseError(.*$||;
+					s|^.*globalDebugMessageHandler(.*$||;
+					s|^.*g_assertion_message_expr.*$||;
 					s|^# [0-9]* \".*$||;s/[0-9n.]*-git-${gitref}/git/;
 					s/\"[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\"/00:00:00/" \
 			< "${filename}" \
-			| grep -v 'printParseError(\|globalDebugMessageHandler(\|debug_[a-z]*(\|^$' \
+			| grep -v '^[ ]*$' \
+			| sed 'N;s/{\n}//g;P;D;' \
+			| grep -v '^[ ]*$' \
 			> "${rootdir}/${preprocdir}/${filename}"
 			touch -r "${filename}" "${rootdir}/${preprocdir}/${filename}"
 		)&
@@ -164,7 +178,7 @@ cat <<\EOF
 
 you can now diff the two preprocessed sources, for example:
 
-	diff -r 'preproc/before' 'preproc/after'
+	diff -u1 -r 'preproc/before' 'preproc/after'
 
 or:
 

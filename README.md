@@ -4,7 +4,7 @@ NetRadiant clean-up diff
 What's this?
 ------------
 
-This is a tool to check Melanosuchus's clean-up branch lost nothing useful.
+This is a tool to be sure Melanosuchus's clean-up branch lost nothing useful.
 
 It's cloning the netradiant repository before and after clean-up,
 then adds an option to CMakeLists to keep preprocessed files,

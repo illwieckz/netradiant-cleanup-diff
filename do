@@ -138,7 +138,13 @@ do
 		mkdir -pv "${rootdir}/${preprocdir}/${dirname}"
 		(
 			echo "'${filename}' -> '${rootdir}/${preprocdir}/${filename}'"
-			sed -e "s|${rootdir}/${repodir}||;s|${rootdir}/${builddir}||;s|^# [0-9]* \".*$||;s/[0-9n.]*-git-${gitref}/git/;s/\"[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\"/00:00:00/" < "${filename}" | grep -v 'globalDebugMessageHandler\|^$' > "${rootdir}/${preprocdir}/${filename}"
+			sed -e "s|${rootdir}/${repodir}||;
+					s|${rootdir}/${builddir}||;
+					s|^# [0-9]* \".*$||;s/[0-9n.]*-git-${gitref}/git/;
+					s/\"[0-9][0-9]:[0-9][0-9]:[0-9][0-9]\"/00:00:00/" \
+			< "${filename}" \
+			| grep -v 'printParseError(\|globalDebugMessageHandler(\|debug_[a-z]*(\|^$' \
+			> "${rootdir}/${preprocdir}/${filename}"
 			touch -r "${filename}" "${rootdir}/${preprocdir}/${filename}"
 		)&
 
